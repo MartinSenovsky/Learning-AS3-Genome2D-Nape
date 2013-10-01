@@ -3,10 +3,11 @@ package Hra
 	import com.genome2d.components.GComponent;
 	import com.genome2d.components.physics.nape.GNapeBody;
 	import com.genome2d.components.renderables.GMovieClip;
-	import com.genome2d.components.renderables.GSprite;
 	import com.genome2d.core.GNode;
 	import com.genome2d.physics.GNapeFactory;
 	import flash.events.MouseEvent;
+	import Hra.Components.LookToMouse;
+	import Hra.Components.MoveForward;
 	
 	/**
 	 * ...
@@ -17,6 +18,8 @@ package Hra
 		public var gmc:GMovieClip;
 		public var shooting:Boolean;
 		public var readyToShoot:Boolean;
+		public var fireEachNthFrame:int = 5; // 30 fps / 5 = 6 bullets per second
+		public var fireEachNthFrameN:int;
 		
 		public var animStand:Array = ["stand"];
 		public var animShoot:Array = ["shoot"];
@@ -29,13 +32,12 @@ package Hra
 			gmc = node.addComponent(GMovieClip) as GMovieClip;
 			gmc.setTextureAtlas(Atlas.allAtlas);
 			gmc.frameRate = 10;
-			playAnim(animWalk);
+			playAnim(animStand);
 			
 			node.transform.setScale(0.5, 0.5);
 			
 			
 			node.addComponent(LookToMouse);
-			node.addComponent(MoveForward);
 			
 			var body:GNapeBody = node.addComponent(GNapeBody) as GNapeBody;
 			body.napeBody = GNapeFactory.createCircle(12);
@@ -55,6 +57,8 @@ package Hra
 		
 		private function onUp(e:MouseEvent):void 
 		{
+			shooting = false;
+			
 			if (readyToShoot)
 			{
 				
@@ -74,6 +78,7 @@ package Hra
 			if (readyToShoot)
 			{
 				shoot();
+				shooting = true;
 			}
 			else
 			{
@@ -103,10 +108,12 @@ package Hra
 		
 		override public function update(p_deltaTime:Number, p_parentTransformUpdate:Boolean, p_parentColorUpdate:Boolean):void 
 		{
-			if (shooting)
+			if (shooting && fireEachNthFrameN == 0)
 			{
 				shoot();
 			}
+			
+			fireEachNthFrameN--;
 			
 			super.update(p_deltaTime, p_parentTransformUpdate, p_parentColorUpdate);
 		}
@@ -118,6 +125,7 @@ package Hra
 			b.node.transform.rotation = node.transform.rotation;
 			b.node.transform.setPosition(node.transform.x, node.transform.y);
 			Game.layerBullets.addChild(b.node);
+			fireEachNthFrameN = fireEachNthFrame;
 		}
 		
 	}

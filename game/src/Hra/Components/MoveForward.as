@@ -1,4 +1,4 @@
-package Hra 
+package Hra.Components 
 {
 	import com.genome2d.components.GComponent;
 	import com.genome2d.core.GNode;
@@ -7,10 +7,12 @@ package Hra
 	 * ...
 	 * @author Andrej Senovsky
 	 */
-	public class LookToPlayer extends GComponent 
+	public class MoveForward extends GComponent 
 	{
 		
-		public function LookToPlayer(p_node:GNode) 
+		public var speed:int = 300;
+		
+		public function MoveForward(p_node:GNode) 
 		{
 			super(p_node);
 			
@@ -18,17 +20,13 @@ package Hra
 		
 		override public function update(p_deltaTime:Number, p_parentTransformUpdate:Boolean, p_parentColorUpdate:Boolean):void 
 		{
-			var mouseX:int = Game.player.node.transform.x;
-			var mouseY:int = Game.player.node.transform.y;
 			
-			var dx:int = mouseX - node.transform.x;
-			var dy:int = mouseY - node.transform.y;
 			
-			var angle:Number;
 			
-			angle = Math.atan2(dy, dx);
+			node.transform.x += Math.cos(node.transform.rotation) * speed * p_deltaTime / 1000;
+			node.transform.y += Math.sin(node.transform.rotation) * speed * p_deltaTime / 1000;
 			
-			node.transform.rotation = angle;
+			
 			
 			super.update(p_deltaTime, p_parentTransformUpdate, p_parentColorUpdate);
 		}

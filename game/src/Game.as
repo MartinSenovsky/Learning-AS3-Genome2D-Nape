@@ -1,13 +1,13 @@
 package  
 {
-	import com.genome2d.components.particles.GSimpleEmitter;
 	import com.genome2d.components.renderables.GSprite;
-	import com.genome2d.context.GBlendMode;
 	import com.genome2d.core.Genome2D;
 	import com.genome2d.core.GNode;
 	import com.genome2d.core.GNodeFactory;
 	import Hra.Enemy;
+	import Hra.EnemyPool;
 	import Hra.Player;
+	
 	/**
 	 * ...
 	 * @author Andrej Senovsky
@@ -49,9 +49,7 @@ package
 			
 			for (var i:int = 0; i < 100; i++)
 			{
-				var e:Enemy = GNodeFactory.createNodeWithComponent(Enemy) as Enemy;
-				layerZomies.addChild(e.node);
-				e.node.transform.setPosition(randomInt(10,800), randomInt(10,800));
+				addEnemyAtXY(randomInt(10, 800), randomInt(10, 800));
 			}
 			
 			var bg:GSprite = GNodeFactory.createNodeWithComponent(GSprite) as GSprite;
@@ -59,6 +57,26 @@ package
 			bg.node.transform.setPosition(512, 512);
 			layerBg.addChild(bg.node);
 			
+		}
+		
+		
+		static public function addEnemyAtXY(x:int, y:int):void
+		{
+			var e:Enemy = EnemyPool.getEnemy();
+			layerZomies.addChild(e.node);
+			e.node.transform.setPosition(x, y);
+			e.ready();
+		}
+		
+		
+		static public function removeEnemy(e:Enemy):void
+		{
+			if(e.node.parent)
+			{
+				e.node.parent.removeChild(e.node);
+			}
+			
+			EnemyPool.storeEnemy(e);
 		}
 		
 		

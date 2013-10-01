@@ -30,7 +30,11 @@ package Hra
 		static public function storeBullet(b:Bullet):void
 		{
 			b.used = false;
-			b.node.parent.removeChild(b.node);
+			
+			if(b.node.parent)
+			{
+				b.node.parent.removeChild(b.node);
+			}
 		}
 		
 		

@@ -1,4 +1,4 @@
-package Hra 
+package Hra.Components 
 {
 	import com.genome2d.components.GComponent;
 	import com.genome2d.core.GNode;
